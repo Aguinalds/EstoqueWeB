@@ -3,3 +3,4 @@ appsettings.json
 *.db-wal
 *.db-shm
 node_modules
+bin
