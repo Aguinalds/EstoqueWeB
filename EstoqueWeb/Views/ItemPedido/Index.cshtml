@@ -1,0 +1,100 @@
+﻿@model IEnumerable<ItemPedidoModel>
+@{
+    var pedido = ViewBag.Pedido as PedidoModel;
+    ViewBag.Subtitulo = $"Itens de Pedido <b>{pedido.IdPedido:D4}</b>";
+}
+
+<br />
+<header class="d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="text-primary">
+            @Html.Raw(ViewBag.Subtitulo)
+            @(pedido.DataPedido.HasValue ? "(Fechado)" : "")
+        </h1>
+    </div>
+    @if (!pedido.DataPedido.HasValue)
+    {
+        <div>
+            <a asp-action="Cadastrar" asp-route-ped="@pedido.IdPedido" class="btn btn-primary">Novo Item</a>
+        </div>
+    }
+</header>
+<h5>Cliente: <b>@pedido.Cliente.Nome</b></h5>
+<hr />
+
+@if (pedido.DataEntrega.HasValue)
+{
+    <h6>Endereço de entrega: @pedido.EnderecoEntrega.EnderecoCompleto</h6>
+    <hr />
+}
+
+<partial name="_Mensagem" />
+
+@if (Model.Count() > 0)
+{
+    <table class="text-primary table-dark table table-striped border border-primary border-2 rounded-3 tabela-itens" id="tableAll">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Valor Unit</th>
+                <th>Quantidade</th>
+                <th>Valor Item</th>
+                @if (!pedido.DataPedido.HasValue)
+                {
+                    <th>Ações</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var itemPedido in Model)
+            {
+                <tr>
+                    <td>@itemPedido.Produto.Nome</td>
+                    <td>@itemPedido.ValorUnitario.ToString("C")</td>
+                    <td>@itemPedido.Quantidade</td>
+                    <td>@itemPedido.ValorItem.ToString("C")</td>
+
+                    @if (!pedido.DataPedido.HasValue)
+                    {
+                        <td>
+
+
+                            <a asp-action="Cadastrar" asp-route-ped="@itemPedido.IdPedido"
+                               asp-route-prod="@itemPedido.IdProduto"
+                               class="bi bi-pencil btn btn-outline-secondary"></a>
+                            <a asp-action="Excluir" asp-route-ped="@itemPedido.IdPedido"
+                               asp-route-prod="@itemPedido.IdProduto"
+                               class="bi bi-trash3-fill btn btn-outline-danger"></a>
+                        </td>
+                    }
+                </tr>
+            }
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-end"><b>Valor total do Pedido:</b></td>
+                <td><b>@Model.Sum(i => i.ValorItem).ToString("C")</b></td>
+                @if(!pedido.DataPedido.HasValue)
+                {
+                    <td></td>
+                }
+            </tr>
+        </tfoot>
+    </table>
+}
+else
+{
+    <p>Não há nennhum item cadastrado para este pedido.</p>
+    <hr />
+}
+
+<div class="d-flex justify-content-end align-items-center gap-2">
+    <a asp-action="Index" asp-controller="Pedido" asp-route-cid="@pedido.IdCliente"
+       class="btn btn-outline-secondary">Voltar</a>
+    @if (!pedido.DataPedido.HasValue && pedido.ItensPedido.Count() > 0)
+    {
+        <a asp-action="Fechar" asp-controller="Pedido" asp-route-id="@pedido.IdPedido"
+           class="btn btn-primary">Fechar Pedido</a>
+    }
+</div>

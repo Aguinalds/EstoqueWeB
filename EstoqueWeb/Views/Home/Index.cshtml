@@ -1,0 +1,51 @@
+﻿@model IEnumerable<PedidoModel>
+@{
+    ViewBag.Subtitulo = "Página Principal";
+}
+
+<br />
+<div class="text-center">
+    <h1 class="text-primary">Bem-vindo ao <b>EstoqueWeb</b></h1>
+    <hr />
+    <p>Gerencie seu estoque de produtos e suas vendas. Use o menu seperior para acessar os recuros da aplicação.</p>
+</div>
+<hr />
+<h2 class="text-primary text-center" >Pedidos em Aberto</h2>
+@if (Model.Count() > 0)
+{
+    <table class="text-primary table-dark table table-striped border border-primary border-2 rounded-3 tabela-abertos" id="tableAll">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Valor Total</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in Model)
+            {
+                <tr>
+                    <td>@pedido.IdPedido.ToString("D4")</td>
+                    <td>@(pedido.Cliente.Nome)</td>
+                    <td>@pedido.ValorTotal.Value.ToString("C")</td>
+                    <td>
+                        <a asp-action="Fechar" asp-controller="Pedido" asp-route-id="@pedido.IdPedido"
+                           class="bi bi-box2-fill btn btn-outline-success"></a>
+
+                        <a asp-action="Index" asp-controller="ItemPedido" asp-route-ped="@pedido.IdPedido"
+                           class="bi bi-cart2 btn btn-outline-primary"></a>
+
+                        <a asp-action="Excluir" asp-controller="Pedido" asp-route-id="@pedido.IdPedido"
+                           class="bi bi-trash3-fill btn btn-outline-danger"></a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Não há nennhum pedido em aberto no momento.</p>
+}
