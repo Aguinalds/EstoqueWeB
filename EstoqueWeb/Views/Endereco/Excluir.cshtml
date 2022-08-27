@@ -14,7 +14,7 @@
     <input type="hidden" asp-for="@Model.IdEndereco" />
     <input type="hidden" asp-for="@cliente.IdUsuario" name="IdUsuario"/>
     <div class="mt-3">
-        <a asp-action="Index" asp-route-cid="@cliente.IdUsuario" class="btn btn-outline-primary w-25">Não</a>
+        <a asp-action="Index" asp-route-cid="@cliente.IdUsuario" class="btn btn-outline-success w-25">Não</a>
         <button class="btn btn-outline-danger w-25" type="submit">Sim</button>
     </div>
 </form>

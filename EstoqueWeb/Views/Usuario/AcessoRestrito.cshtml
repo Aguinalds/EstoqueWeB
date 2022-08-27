@@ -1,0 +1,15 @@
+﻿@model string
+
+@{ 
+    ViewBag.Subtitulo = "Acesso Restrito";
+}
+
+<h1 class="text-danger bi bi-x-circle text-center" style="font-size: 50px; padding-top: 5vh;"> @ViewBag.Subtitulo</h1>
+<hr />
+<h4 class="text-center">
+    Você não tem permissão para acessar a página. fale com o suporte de EstoqueWeb para essa liberação,
+    Clique no botão
+    para voltar à página principal ou para sair.
+</h4>
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary mt-5" >Voltar à Página Principal</a>
+<a asp-action="Logout" asp-controller="Usuario" class="btn btn-outline-primary mt-5 ml-2" >Sair</a>

@@ -6,7 +6,7 @@
     var classeMenuProdutos = controllerAtual == "Produto" ? "active" : "";
     var classeMenuCategorias = controllerAtual == "Categoria" ? "active" : "";
     var classeMenuClientes = controllerAtual == "Cliente" ? "active" : "";
-    var classeMenuLogin = controllerAtual == "Usuario" ? "active" : "";
+    var classeMenuUsuario = controllerAtual == "Usuario" ? "active" : "";
 }
 
 <!DOCTYPE html>
@@ -24,22 +24,26 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-0 m-0 ">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
         <div class="container">
 
-            <a class="navbar-brand text-primary" href="/">
-                <p class="textEstoque"><b class="text-primary" style="font-size: 30px; margin-right: 2px;">E</b>stoqueWeb</p>
+            <a class="navbar-brand text-primary pt-3" href="/">
+                <p class="textEstoque">EstoqueWeeb</p>
 
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarMain">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div id="navbarMain" class="w-auto">
+            @if (Context.User.Identity.IsAuthenticated)
+            {
+                <button class="navbar-toggler first-button" type="button" data-toggle="collapse" data-target="#navbarMain"
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation" style="position:absolute; left:10px; top:10px;">
+                    <div class="animated-icon1"><span></span><span></span><span></span></div>
+                </button>
+            }
+            <div id="navbarMain" class="w-auto " style="">
                 @if (Context.User.Identity.IsAuthenticated)
                 {
-                    <div class="navbar-nav ml-5 ">
+                    <div class="navbar-nav ml-5 menu-itens" style="">
+
                         <a class="nav-link @classeMenuPrincipal" asp-controller="Home" asp-action="Index">Principal </a>
 
                         <a class="nav-link  @classeMenuProdutos" asp-controller="Produto" asp-action="Index">Produtos </a>
@@ -48,7 +52,7 @@
 
                         <a class="nav-link @classeMenuClientes" asp-controller="Cliente" asp-action="Index">Clientes </a>
 
-
+                        <a class="nav-link @classeMenuUsuario" asp-controller="Usuario" asp-action="Index">Usuários </a>
 
                     </div>}
                 else
@@ -68,9 +72,9 @@
         @RenderBody()
     </div>
 
-    <div class="text-secondary bg-dark p-2 fixed-bottom text-center">
+    <div class="text-secondary bg-dark p-2 text-center" style="position: absolute; bottom: 0; width: 100%">
         EstoqueWeb&copy;@DateTime.Now.Year.ToString()
-        
+
         / Todos os direitos reservados
         @RenderSection("Footer", false)
     </div>

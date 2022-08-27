@@ -5,10 +5,10 @@
 <h1 class="text-primary">@ViewBag.Subtitulo</h1>
 <hr />
 <h4 class="text-primary">Deseja excluir esse produto: <span class="text-danger">@Model.Nome?</span></h4>
-<form asp-action="Excluir" class="w-25">
+<form asp-action="Excluir" class="w-25" style="margin-bottom: 200px;">
     <input type="hidden" asp-for="@Model.IdProduto" />
     <div class="mt-3">
-        <a asp-action="Index" class="btn btn-outline-primary w-25">Não</a>
+        <a asp-action="Index" class="btn btn-outline-success w-25">Não</a>
         <button class="btn btn-outline-danger w-25" type="submit">Sim</button>
     </div>
 </form>

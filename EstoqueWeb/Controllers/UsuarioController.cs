@@ -17,23 +17,49 @@ namespace EstoqueWeb.Controllers
 {
     public class UsuarioController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly EstoqueWebContext _context;
 
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<UsuarioModel> _userManager;
+
+        private readonly SignInManager<UsuarioModel> _signInManager;
 
         private readonly IEmailSender _emailSender;
 
-        public UsuarioController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailSender emailSender)
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+
+        public UsuarioController(
+            EstoqueWebContext context,
+            UserManager<UsuarioModel> userManager,
+            SignInManager<UsuarioModel> signInManager,
+            IEmailSender emailSender,
+            RoleManager<IdentityRole<int>> roleManager)
         {
+            this._context = context;
             this._emailSender = emailSender;
             this._userManager = userManager;
             this._signInManager = signInManager;
-
+            this._roleManager = roleManager;
         }
 
 
-        //LISTAR USUARIOS
 
+        //LISTAR USUARIOS
+        [Authorize(Roles = "administrador")]
+        //Listar
+        public async Task<IActionResult> Index()
+        {
+            var usuarios = await _userManager.Users.AsNoTracking().ToListAsync();
+            var geren = (await _userManager.GetUsersInRoleAsync("gerente"))
+                .Select(u => u.UserName);
+            ViewBag.Gerentes = geren;
+            var admins = (await _userManager.GetUsersInRoleAsync("administrador"))
+                .Select(u => u.UserName);
+            ViewBag.Administradores = admins;
+            return View(usuarios);
+        }
+
+
+        //CADASTRAR
         [HttpGet]
         public async Task<IActionResult> Cadastrar(string id)
         {
@@ -48,7 +74,9 @@ namespace EstoqueWeb.Controllers
                 var usuarioVM = new CadastrarUsuarioViewModel
                 {
                     Id = usuarioBD.Id,
-                    NomeUsuario = usuarioBD.UserName,
+                    NomeCompleto = usuarioBD.NomeCompleto,
+                    DataNascimento = usuarioBD.DataNascimento,
+                    CPF = usuarioBD.CPF,
                     Email = usuarioBD.Email,
                     Telefone = usuarioBD.PhoneNumber
                 };
@@ -58,7 +86,7 @@ namespace EstoqueWeb.Controllers
             return View(new CadastrarUsuarioViewModel());
         }
 
-        private bool EntidadeExiste(string id)
+        private bool EntidadeExiste(int id)
         {
             return (_userManager.Users.AsNoTracking().Any(u => u.Id == id));
         }
@@ -66,101 +94,67 @@ namespace EstoqueWeb.Controllers
 
         //MAPEANDO O CADASTRO
         private static void MapearCadastrarUsuarioViewModel
-            (CadastrarUsuarioViewModel entidadeOrigem, IdentityUser
+            (CadastrarUsuarioViewModel entidadeOrigem, UsuarioModel
             entidadeDestino)
         {
-            entidadeDestino.UserName = entidadeOrigem.NomeUsuario;
-            entidadeDestino.NormalizedUserName = entidadeOrigem.NomeUsuario.ToUpper().Trim();
+            entidadeDestino.NomeCompleto = entidadeOrigem.NomeCompleto;
+            entidadeDestino.DataNascimento = entidadeOrigem.DataNascimento;
+            entidadeDestino.CPF = entidadeOrigem.CPF;
+            entidadeDestino.UserName = entidadeOrigem.Email;
+            entidadeDestino.NormalizedUserName = entidadeOrigem.Email.ToUpper().Trim();
             entidadeDestino.Email = entidadeOrigem.Email;
             entidadeDestino.NormalizedEmail = entidadeOrigem.Email.ToUpper().Trim();
             entidadeDestino.PhoneNumber = entidadeOrigem.Telefone;
         }
 
 
-        //CADASTRANDO E ALTERANDO
-
+        //CADASTRANDO
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromForm] CadastrarUsuarioViewModel usuarioVM)
         {
-            //se for alteração, não tem senha e confirmação de senha
-            if (!string.IsNullOrEmpty(usuarioVM.Id))
-            {
-                ModelState.Remove("Senha");
-                ModelState.Remove("ConfSenha");
-            }
 
             if (ModelState.IsValid)
             {
-                if (EntidadeExiste(usuarioVM.Id))
+                var usuarioBD = await _userManager.FindByEmailAsync(usuarioVM.Email);
+                if (usuarioBD != null)
                 {
-                    var usuarioBD = await _userManager.FindByIdAsync(usuarioVM.Id);
-                    if ((usuarioVM.Email != usuarioBD.Email) &&
-                        (_userManager.Users.Any(u => u.NormalizedEmail == usuarioVM.Email.ToUpper().Trim())))
-                    {
-                        ModelState.AddModelError("Email",
-                            "Já existe um usuário cadastrado com este e-mail.");
-                        return View(usuarioVM);
-                    }
-                    MapearCadastrarUsuarioViewModel(usuarioVM, usuarioBD);
+                    TempData["mensagem"] = MensagemModel.Serializar("Esse e-mail já está sendo usado.", TipoMensagem.Erro);
+                    return View("Cadastrar");
+                }
 
-                    var resultado = await _userManager.UpdateAsync(usuarioBD);
-                    if (resultado.Succeeded)
-                    {
-                        TempData["mensagem"] = MensagemModel.Serializar("Usuário alterado com sucesso.", TipoMensagem.Erro);
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        TempData["mensagem"] = MensagemModel.Serializar("Erro ao alterar o usuário.", TipoMensagem.Erro);
-                        foreach (var error in resultado.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                        return View(usuarioVM);
-                    }
+                usuarioBD = new UsuarioModel();
+
+                MapearCadastrarUsuarioViewModel(usuarioVM, usuarioBD);
+
+                var resultado = await _userManager.CreateAsync(
+                    usuarioBD, usuarioVM.Senha);
+                if (resultado.Succeeded)
+                {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(usuarioBD);
+                    var urlConfirmacaoEmail = Url.Action
+                        ("ConfirmarEmail", "Usuario", new { email = usuarioBD.Email, token }, Request.Scheme);
+                    var msg = new StringBuilder();
+                    msg.Append("<h1>EstoqueWEB : Confirmação de E-mail </h1>");
+                    msg.Append($"<p> Olá, {usuarioBD.NomeCompleto}.</p>");
+                    msg.Append($"<p>Por favor, confirme seu e-mail " +
+                        $"<a href='{urlConfirmacaoEmail} '> Clicando aqui</a>.</p>");
+                    msg.Append("<p>Atenciosamente, <br> Equipe de Suporte EstoqueWEB</p>");
+                    await _emailSender.SendEmailAsync(usuarioBD.Email, "Confirmação de E-mail", "", msg.ToString());
+                    TempData["mensagem"] = MensagemModel.Serializar("Cadastrado com sucesso. Uma mensagem de confirmação foi enviada para seu e-mail. Confirme para entrar no sitema");
+                    return View("Login");
+
                 }
                 else
                 {
-                    var usuarioBD = await _userManager.FindByEmailAsync(usuarioVM.Email);
-                    if (usuarioBD != null)
+
+                    TempData["mensagem"] = MensagemModel.Serializar("Erro ao cadastrar usuário.", TipoMensagem.Erro);
+                    foreach (var error in resultado.Errors)
                     {
-                        TempData["mensagem"] = MensagemModel.Serializar("Esse e-mail já está sendo usado.", TipoMensagem.Erro);
-                        return View("Cadastrar");
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
-
-                    usuarioBD = new IdentityUser();
-
-                    MapearCadastrarUsuarioViewModel(usuarioVM, usuarioBD);
-
-                    var resultado = await _userManager.CreateAsync(
-                        usuarioBD, usuarioVM.Senha);
-                    if (resultado.Succeeded)
-                    {
-                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(usuarioBD);
-                        var urlConfirmacaoEmail = Url.Action
-                            ("ConfirmarEmail", "Usuario", new { email = usuarioBD.Email, token }, Request.Scheme);
-                        var msg = new StringBuilder();
-                        msg.Append("<h1>EstoqueWEB : Confirmação de E-mail </h1>");
-                        msg.Append($"<p> Olá, {usuarioBD.UserName}.</p>");
-                        msg.Append($"<p>Por favor, confirme seu e-mail " +
-                            $"<a href='{urlConfirmacaoEmail} '> Clicando aqui</a>.</p>");
-                        msg.Append("<p>Atenciosamente, <br> Equipe de Suporte EstoqueWEB</p>");
-                        await _emailSender.SendEmailAsync(usuarioBD.Email, "Confirmação de E-mail", "", msg.ToString());
-                        TempData["mensagem"] = MensagemModel.Serializar("Cadastrado com sucesso. Uma mensagem de confirmação foi enviada para seu e-mail. Confirme para entrar no sitema");
-                        return View("Login");
-
-                    }
-                    else
-                    {
-
-                        TempData["mensagem"] = MensagemModel.Serializar("Erro ao cadastrar usuário.", TipoMensagem.Erro);
-                        foreach (var error in resultado.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                        return View(usuarioVM);
-                    }
+                    return View(usuarioVM);
                 }
+
             }
             else
             {
@@ -168,6 +162,52 @@ namespace EstoqueWeb.Controllers
             }
         }
 
+
+        //CONFIRMANDO SE O USUARIO EXISTE PARA EXCLUSÃO
+        [Authorize(Roles = "administrador")]
+        [HttpGet]
+        public async Task<IActionResult> Excluir(int? id)
+        {
+            if (!id.HasValue)
+            {
+                TempData["mensagem"] = MensagemModel.Serializar("Usuário não informado", TipoMensagem.Erro);
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!EntidadeExiste(id.Value))
+            {
+                TempData["mensagem"] = MensagemModel.Serializar("Usuário não encontrado.", TipoMensagem.Erro);
+                return RedirectToAction(nameof(Index));
+            }
+
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+
+            return View(usuario);
+        }
+
+        //EXCLUINDO USUARIO
+        [Authorize(Roles = "administrador")]
+        [HttpPost]
+        public async Task<IActionResult> ExcluirPost(int id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+            if (usuario != null)
+            {
+                var resultado = await _userManager.DeleteAsync(usuario);
+                if (resultado.Succeeded)
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar("Usuário excluído com sucesso.");
+                }
+                else
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar("Não foi possível excluir o usuário.", TipoMensagem.Erro);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["mensagem"] = MensagemModel.Serializar("Usuário não encontrado.", TipoMensagem.Erro);
+            return RedirectToAction(nameof(Index));
+        }
 
         [HttpGet]
 
@@ -194,6 +234,7 @@ namespace EstoqueWeb.Controllers
                     TempData["mensagem"] = MensagemModel.Serializar("Esta conta ainda não foi confirmada, Confirme o e-mail e tente novamente.", TipoMensagem.Erro);
                     return View(login);
                 }
+                
                 var resultado = await _signInManager.PasswordSignInAsync(login.
                     Usuario, login.Senha, login.Lembrar, false);
                 if (resultado.Succeeded)
@@ -283,11 +324,11 @@ namespace EstoqueWeb.Controllers
             {
 
                 var usuario = await _userManager.FindByEmailAsync(dados.Email);
-                if(usuario == null)
+                if (usuario == null)
                 {
                     TempData["mensagem"] = MensagemModel.Serializar("Não foi possível redefinir a senha. Verifique se preencheu o email corretamente." +
                            " Se o problema persistir, entre em contato com o suporte.", TipoMensagem.Erro);
-                   
+
                     return View(dados);
                 }
                 var resultado = await _userManager.ResetPasswordAsync(usuario, dados.Token, dados.NovaSenha);
@@ -313,7 +354,7 @@ namespace EstoqueWeb.Controllers
             }
         }
 
-        
+
         [HttpGet, Authorize]
         public IActionResult AlterarSenha()
         {
@@ -321,7 +362,7 @@ namespace EstoqueWeb.Controllers
         }
 
         //ALTERAR SENHA
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> AlterarSenha([FromForm] AlterarSenhaModel dados)
         {
             if (ModelState.IsValid)
@@ -372,7 +413,127 @@ namespace EstoqueWeb.Controllers
 
             return View(nameof(Login));
 
+        }
 
+        //PÁGINA ACESSO RESTRITO
+        public IActionResult AcessoRestrito([FromQuery] string returnUrl)
+        {
+            return View(model: returnUrl);
+        }
+
+        //ADICIONADO PERFIL ADMINISTRADOR
+        [Authorize(Roles = "administrador")]
+        public async Task<IActionResult> AddAdministrador(int id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+            if (usuario != null)
+            {
+                var resultado = await _userManager.AddToRoleAsync(usuario, "administrador");
+                if (resultado.Succeeded)
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Perfil administrador adicionado com sucesso para {usuario.NomeCompleto}.");
+                }
+                else
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Não foi possível adicionar esse perfil como administrador {usuario.NomeCompleto}.");
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["mensagem"] = MensagemModel.Serializar("Usuário não encontrado", TipoMensagem.Erro);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        //REMOVENDO PERFIL ADMINISTRADO
+        [Authorize(Roles = "administrador")]
+        public async Task<IActionResult> RemAdministrador(int id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+            if (usuario != null)
+            {
+                var resultado = await _userManager.RemoveFromRoleAsync(usuario, "administrador");
+                if (resultado.Succeeded)
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Perfil administrador removido com sucesso do {usuario.NomeCompleto}.");
+                }
+                else
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Não foi possível remover esse perfil como administrador {usuario.NomeCompleto}.");
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["mensagem"] = MensagemModel.Serializar("Usuário não encontrado", TipoMensagem.Erro);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        //ADICIONANDO PERFIL GERENTE
+        [Authorize(Roles = "administrador")]
+        public async Task<IActionResult> AddGerente(int id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+            if (usuario != null)
+            {
+                var resultado = await _userManager.AddToRoleAsync(usuario, "gerente");
+                if (resultado.Succeeded)
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Perfil Gerente adicionado com sucesso do {usuario.NomeCompleto}.");
+                }
+                else
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Não foi possível remover esse perfil como Gerente {usuario.NomeCompleto}.", TipoMensagem.Erro);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["mensagem"] = MensagemModel.Serializar("Usuário não encontrado", TipoMensagem.Erro);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        //REMOVENDO PERFIL GERENTE
+        [Authorize(Roles = "administrador")]
+        public async Task<IActionResult> RemGerente(int id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+            if (usuario != null)
+            {
+                var resultado = await _userManager.RemoveFromRoleAsync(usuario, "gerente");
+                if (resultado.Succeeded)
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Perfil Gerente removido com sucesso do {usuario.NomeCompleto}.");
+                }
+                else
+                {
+                    TempData["mensagem"] = MensagemModel.Serializar($"Não foi possível remover esse perfil como Gerente {usuario.NomeCompleto}.", TipoMensagem.Erro);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["mensagem"] = MensagemModel.Serializar("Usuário não encontrado", TipoMensagem.Erro);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        //ENVIANDO LINK DE CONFIRMAÇÃO DE CONTA
+        private async Task EnviarLinkConfirmacaoEmailAsync(UsuarioModel usuario)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(usuario);
+            var urlConfirmacao = Url.Action
+                ("ConfirmarEmail", "Usuario", new { email = usuario.Email, token }, Request.Scheme);
+            var msg = new StringBuilder();
+            msg.Append("<h1>EstoqueWEB : Confirmação de E-mail </h1>");
+            msg.Append($"<p> Olá, {usuario.NomeCompleto}.</p>");
+            msg.Append($"<p>Recebemos seu cadastro em nosso sistema, Para concluir o processo de cadastro, clique no link a seguir " +
+                $"<a href='{urlConfirmacao} '> Clicando aqui</a>.</p>");
+            msg.Append("<p>Atenciosamente, <br> Equipe de Suporte EstoqueWEB</p>");
+            await _emailSender.SendEmailAsync(usuario.Email, "Confirmação de E-mail", "", msg.ToString());
 
         }
 

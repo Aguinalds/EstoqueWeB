@@ -20,7 +20,7 @@ namespace EstoqueWeb.Controllers
             this._context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador, gerente")]
         public async Task<IActionResult> Index()
         {
             var pedidos = await _context.Pedidos

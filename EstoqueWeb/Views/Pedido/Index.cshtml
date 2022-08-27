@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PedidoModel>
 @{
     var cliente = ViewBag.Clientes as ClienteModel;
-    ViewBag.Subtitulo = $"Pedidos do cliente <b>{cliente.Nome }</b>";
+    ViewBag.Subtitulo = $"Pedidos do cliente <b>{cliente.NomeUsuario}</b>";
 }
 <br />
 <header class="d-flex justify-content-between align-items-center">
@@ -18,7 +18,9 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="text-primary table-dark table table-striped border border-primary border-2 rounded-3 tabela-pedidos" id="tableAll">
+<div class="table-responsive"  style="margin-bottom: 200px;">
+    <table class="text-black table table-bordered border border-secondary border-2 rounded-3 tabela-pedidos" id="tableAll"
+           style="margin-bottom: 200px;">
         <thead>
             <tr>
                 <th>Número</th>
@@ -36,37 +38,45 @@
                     <td>@(pedido.DataPedido.HasValue ? pedido.DataPedido : "Em aberto")</td>
                     <td>@pedido.ValorTotal.Value.ToString("C")</td>
                     <td>@(pedido.DataEntrega.HasValue ? pedido.DataEntrega : "Não entregue")</td>
+
                     <td>
 
                         @if (pedido.DataPedido.HasValue)
                         {
-                            <span class="bi bi-box2-fill btn btn-outline-secondary"></span>
+
                             @if (pedido.DataEntrega.HasValue)
                             {
-                                <span class="bi bi-truck btn btn-outline-secondary"></span>
+
+                                <a asp-action="Visualizar" asp-route-id="@pedido.IdPedido"
+                                   class="bi bi bi-search btn btn-outline-primary"></a>
+
                             }
                             else
                             {
                                 <a asp-action="Entregar" asp-route-id="@pedido.IdPedido"
                                    class="bi bi-truck btn btn-outline-success"></a>
+
                             }
                         }
                         else
                         {
+                            
                             <a asp-action="Fechar" asp-route-id="@pedido.IdPedido"
                                class="bi bi-box2-fill btn btn-outline-success"></a>
-                            <span class="bi bi-truck  btn btn-outline-secondary"></span>
+
                         }
-                        <a asp-action="Index" asp-controller="ItemPedido" asp-route-ped="@pedido.IdPedido"
-                           class="bi bi-cart2 btn btn-outline-primary"></a>
+
+
                         <a asp-action="Excluir" asp-route-id="@pedido.IdPedido"
                            class="bi bi-trash3-fill btn btn-outline-danger"></a>
+
                     </td>
                 </tr>
             }
 
         </tbody>
     </table>
+</div>
 }
 else
 {

@@ -1,11 +1,6 @@
 ﻿@model EstoqueWeb.ViewModel.CadastrarUsuarioViewModel
 @{
-    bool alterando = (Context.Request.RouteValues.ContainsKey("id"));
-
-    if (alterando)
-        ViewBag.Subtitulo = "Alteração de Usuário";
-    else
-        ViewBag.Subtitulo = "Cadastro";
+    ViewBag.Subtitulo = "Cadastro";
 }
 
 <br />
@@ -15,42 +10,54 @@
 <div asp-validation-summary="ModelOnly" class="val-summary text-danger mb-3"></div>
 <partial name="_Mensagem" />
 
-<div class="container-login">
+<div class="container-login" style="margin-bottom: 200px;">
     <form asp-action="Cadastrar" class="">
         <div class="bi bi-person text-primary text-center" style="font-size: 40px"></div>
         <input type="hidden" asp-for="@Model.Id" />
         <div class="form-group">
-            
-            <input asp-for="@Model.NomeUsuario" class="form-control " placeholder="Usuário" autocomplete="off" />
-            <span asp-validation-for="@Model.NomeUsuario" class="text-danger"></span>
+
+            <input asp-for="@Model.NomeCompleto" class="form-control" type="text" placeholder="Nome Completo" pattern="([aA-zZ]+)"required autocomplete="off" />
+            <span asp-validation-for="@Model.NomeCompleto" class="text-danger"></span>
         </div>
         <div class="w-100"> </div>
         <div class="form-group">
-            <input asp-for="@Model.Telefone" class="form-control " placeholder="Telefone" autocomplete="off" />
+
+            <input asp-for="@Model.DataNascimento" class="form-control " placeholder="Data de Nascimento"required autocomplete="off" />
+            <span asp-validation-for="@Model.DataNascimento" class="text-danger"></span>
+
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+
+            <input asp-for="@Model.CPF" class="form-control"  placeholder="CPF" maxlength="11"required autocomplete="off" />
+            <span asp-validation-for="@Model.CPF" class="text-danger"></span>
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+            <input asp-for="@Model.Telefone" class="form-control" id="" pattern="[0-9]{11}" placeholder="Apenas Números" maxlength="11" required autocomplete="off" />
             <span asp-validation-for="@Model.Telefone" class="text-danger"></span>
         </div>
         <div class="w-100"> </div>
         <div class="form-group">
- 
-            <input asp-for="@Model.Email" class="form-control " placeholder="E-mail" autocomplete="off" />
+
+            <input asp-for="@Model.Email" class="form-control " placeholder="example@example.com" type="email" name="email"required autocomplete="off" />
             <span asp-validation-for="@Model.Email" class="text-danger"></span>
         </div>
-        @if (!alterando)
-        {
-            <div class="w-100"> </div>
-            <div class="form-group">
-            
-                <input asp-for="@Model.Senha" type="password" class="form-control " placeholder="Senha" autocomplete="off" />
-                <span asp-validation-for="@Model.Senha" class="text-danger"></span>
-            </div>
-            <div class="w-100"> </div>
-            <div class="form-group">
-              
-                <input asp-for="@Model.ConfSenha" class="form-control " placeholder="Confirmação de Senha" autocomplete="off" />
-                <span asp-validation-for="@Model.ConfSenha" class="text-danger"></span>
-                <br />
-            </div>
-        }
+
+        <div class="w-100"> </div>
+        <div class="form-group">
+
+            <input asp-for="@Model.Senha" type="password" class="form-control " placeholder="Senha"required autocomplete="off" />
+            <span asp-validation-for="@Model.Senha" class="text-danger"></span>
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+
+            <input asp-for="@Model.ConfSenha" class="form-control " placeholder="Confirmação de Senha"required autocomplete="off" />
+            <span asp-validation-for="@Model.ConfSenha" class="text-danger"></span>
+            <br />
+        </div>
+
 
         <div class="text-center ml-2">
             <a asp-action="Login" class="btn btn-outline-secondary">Cancelar</a>
@@ -59,3 +66,4 @@
 
     </form>
 </div>
+

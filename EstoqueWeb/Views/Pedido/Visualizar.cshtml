@@ -1,0 +1,49 @@
+﻿@model PedidoModel
+@{
+    ViewBag.Subtitulo = $"Visualização do Pedido <b>{Model.IdPedido:D4}</b>";
+}
+
+<h1 class="text-primary">@Html.Raw(ViewBag.Subtitulo)</h1>
+<hr />
+<h6>Cliente: <b class="text-dark">@Model.Cliente.NomeUsuario</b></h6>
+@if (Model.DataEntrega.HasValue)
+{
+<h6> <b class="text-dark">Endereço de entrega:</b> @Model.EnderecoEntrega.EnderecoCompleto</h6>
+}
+<hr />
+@if (Model.ItensPedido.Count > 0)
+{
+    <h6><b>Itens do Pedido</b></h6>
+    <hr />
+    @foreach (var item in Model.ItensPedido)
+    {
+        <h6>@item.Produto.Nome (@item.Quantidade x @item.ValorUnitario.ToString("C") = @item.ValorItem.ToString("C"))</h6>
+        
+    }
+    <hr />
+    <h6><b>Valor Total do Pedido: @Model.ValorTotal.Value.ToString("C")</b></h6>
+}
+else
+{
+    <h6><b>Não há itens no pedido</b></h6>
+}
+<br />
+@if (Model.DataEntrega.HasValue == false)
+{
+    <h4>Não é possivel imprimir o pedido sem endereço</h4>
+    <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-outline-secondary w-auto mt-3 mr-2">Voltar</a>
+}
+else
+{
+    <h4>Deseja imprimir esse pedido?</h4>
+     
+    <form asp-action="Visualizar" class="w-25" style="margin-bottom: 100px; ">
+        <input type="hidden" asp-for="@Model.IdPedido" name="id" />
+        <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-outline-secondary w-auto mt-3 mr-2">Voltar</a>
+        @if (Context.User.Identity.IsAuthenticated){
+        <a class="btn btn-outline-success w-auto mt-3" href="~/Upload/PdfPedidos/@Model.EntregaPdf">Imprimir Pedido</a>
+        }else{
+        <a>Erro</a>
+        }
+    </form>
+}

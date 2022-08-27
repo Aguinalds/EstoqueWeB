@@ -19,7 +19,7 @@ namespace EstoqueWeb.Controllers
             this._context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //Listar
         public async Task<IActionResult> Index()
         {
@@ -27,7 +27,7 @@ namespace EstoqueWeb.Controllers
             return View(categorias);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador")]
         //CADASTRAR
         [HttpGet]
         public async Task<IActionResult> Cadastrar(int? id)
@@ -53,7 +53,7 @@ namespace EstoqueWeb.Controllers
             return _context.Categorias.Any(x => x.IdCategoria == id);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //CADASTRANDO E ALTERANDO
         [HttpPost]
         public async Task<IActionResult> Cadastrar(int? id, [FromForm] CategoriaModel categorias)
@@ -101,7 +101,7 @@ namespace EstoqueWeb.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //EXCLUINDO
         [HttpGet]
         public async Task<IActionResult> Excluir(int? id)
@@ -122,7 +122,7 @@ namespace EstoqueWeb.Controllers
             return View(categoria);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         [HttpPost]
         public async Task<IActionResult> Excluir(int id)
         {

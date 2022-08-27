@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<ProdutosModel>
 @{
     ViewBag.Subtitulo = "Listagem de Produtos";
+    var Imagem = ViewBag.Image;
 }
+
 
 <br />
 <header class="d-flex justify-content-between align-items-center">
@@ -18,36 +20,51 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="text-primary table-dark table table-striped  border border-primary border-2 rounded-3 tabela-produtos" id="tableAll">
+<div class="table-responsive" style="margin-bottom: 100px; ">
+    <table class="text-black table table-bordered border border-secondary border-2 rounded-3 tabela-produtos" id="tableAll"
+           style="margin-bottom: 200px;">
         <thead>
             <tr>
+                <th>Imagem do Produto</th>
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Estoque</th>
                 <th>Preço</th>
                 <th>Ações</th>
-                
+
             </tr>
         </thead>
         <tbody>
             @foreach (var produtos in Model)
             {
-            <tr>
-                <td>@produtos.Nome</td>
-                <td>@produtos.Categoria.Nome</td>
-                <td>@produtos.Estoque.ToString("D4")</td>
-                <td>@produtos.Preco.ToString("C")</td>
-                <td>
-                    <a asp-action="Cadastrar" asp-route-id="@produtos.IdProduto"
-                       class="bi bi-pencil btn btn-outline-secondary"></a>
-                    <a asp-action="Excluir" asp-route-id="@produtos.IdProduto"
-                       class="bi bi-trash3-fill btn btn-outline-danger"></a>
-                </td>
-            </tr>
+
+                <tr>
+                    <td>
+                        @if (produtos.ImageUrl == null)
+                        {
+                            <img src="https://bhi.com.br/wp-content/themes/arkahost52/assets/images/default.jpg" width="70" height="70" style="border-radius: 10px" class="border border-secondary" />
+                        }
+                        else
+                        {
+                            <img src="~/Upload/Images/@produtos.ImageUrl" width="70" height="70" style="border-radius: 10px" />
+                        }
+                    </td>
+                    <td>@produtos.Nome</td>
+                    <td>@produtos.Categoria.Nome</td>
+                    <td>@produtos.Estoque.ToString("D4")</td>
+                    <td>@produtos.Preco.ToString("C")</td>
+                    <td>
+                        <a asp-action="Cadastrar" asp-route-id="@produtos.IdProduto"
+                           class="bi bi-pencil btn btn-outline-secondary"></a>
+                        <a asp-action="Excluir" asp-route-id="@produtos.IdProduto"
+                           class="bi bi-trash3-fill btn btn-outline-danger"></a>
+                    </td>
+                </tr>
             }
 
         </tbody>
     </table>
+</div>
 }
 else
 {

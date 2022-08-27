@@ -14,20 +14,20 @@
 <div asp-validation-summary="ModelOnly" class="validation-summary text-danger mb-3"></div>
 
 <partial name="_mensagem" />
-<div class="container-login">
+<div class="container-login" style="margin-bottom: 200px;">
     <form asp-action="Login">
         <input type="hidden" name="ReturnUrl" id="ReturnUrl" value="@returnUrl" />
         <div class="form-group mb-3">
 
             <input asp-for="@Model.Usuario" class="form-control w-100" autofocus
-                   autocomplete="off" placeholder="Usuário" />
+                    placeholder="E-mail" required />
             <span asp-validation-for="@Model.Usuario" class="text-danger"></span>
         </div>
         <div class="w-100"></div>
         <div class="form-group mb-3">
 
             <input asp-for="@Model.Senha" class="form-control" autofocus
-                   autocomplete="off" placeholder="Senha" />
+                   autocomplete="off" required placeholder="Senha" />
             <span asp-validation-for="@Model.Senha" class="text-danger"></span>
         </div>
 
@@ -45,6 +45,6 @@
     </form>
 
     <hr />
-    <p class="text-center">Esqueceu sua senha ? <a asp-action="EsqueciSenha" class="text-primary font-weight-bold text-decoration-none">Clique aqui</a></p>
-    <p class="text-center"> Ainda não cadastrou ? <a asp-action="Cadastrar" class="text-primary font-weight-bold text-decoration-none">Clique aqui</a></p>
+    <p class="text-center"><a asp-action="EsqueciSenha" class="text-primary font-weight-bold text-decoration-none">Esqueceu sua senha?</a></p>
+    <p class="text-center"> <a asp-action="Cadastrar" class="text-primary font-weight-bold text-decoration-none">Ainda não cadastrou?</a></p>
 </div>

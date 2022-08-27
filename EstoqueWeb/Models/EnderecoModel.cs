@@ -11,6 +11,8 @@ namespace EstoqueWeb.Models
     [Owned, Table("Endereco")]
     public class EnderecoModel
     {
+
+        [Key]
         public int IdEndereco { get; set; }
 
         [Required]
@@ -48,3 +50,4 @@ namespace EstoqueWeb.Models
 
     }
 }
+

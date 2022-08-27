@@ -1,0 +1,32 @@
+﻿*<script type="text/javascript">
+    let campo_celular = document.querySelector('#campo_celular');
+
+    campo_celular.addEventListener("blur", function (e) {
+        //Remove tudo o que não é dígito
+        let celular = this.value.replace(/\D/g, "");
+
+        if (celular.length == 11) {
+            celular = celular.replace(/^(\d{2})(\d)/g, "($1) $2");
+            resultado_celular = celular.replace(/(\d)(\d{4})$/, "$1-$2");
+            document.getElementById('campo_celular').value = resultado_celular;
+        } else {
+            alert("Digite 11 números.");
+        }
+
+        if (celular.length > 11) {
+            celular = celular.replace(/^(\d{2})(\d)/g, "($1) $2");
+            resultado_celular = celular.replace(/(\d)(\d{4})$/, "$1-$2");
+            document.getElementById('campo_celular').value = resultado_celular;
+        } else {
+            alert("Digite 11 números.");
+        }
+
+        if (celular.length < 11) {
+            celular = celular.replace(/^(\d{2})(\d)/g, "($1) $2");
+            resultado_celular = celular.replace(/(\d)(\d{4})$/, "$1-$2");
+            document.getElementById('campo_celular').value = resultado_celular;
+        } else {
+            alert("Digite 11 números.");
+        }
+    })
+</script>

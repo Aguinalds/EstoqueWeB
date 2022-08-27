@@ -17,7 +17,9 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="text-primary table-dark table table-striped border border-primary border-2 rounded-3 tabela-clientes" id="tableAll">
+<div class="table-responsive">
+    <table class="text-black table table-bordered border border-secondary border-2 rounded-3 tabela-clientes " id="tableAll"
+           style="margin-bottom: 200px;">
         <thead>
             <tr>
                 <th>Nome</th>
@@ -31,25 +33,26 @@
             @foreach (var clientes in Model)
             {
                 <tr>
-                    <td>@clientes.Nome</td>
-                    <td>@clientes.Email</td>
-                    <td>@clientes.CPF</td>
+                    <td> @clientes.NomeUsuario</td>
+                    <td>@clientes.EmailUsuario</td>
+                    <td>@clientes.CPFUsuario</td>
                     <td>@clientes.Idade</td>
                     <td>
                         <a asp-action="Index" asp-controller="Pedido" asp-route-cid="@clientes.IdUsuario"
-                           class="bi bi-bag-plus btn btn-outline-secondary"></a>
+                           class="bi bi bi-handbag btn btn-outline-secondary" title="Pedidos do cliente"></a>
                         <a asp-action="Index" asp-controller="Endereco" asp-route-cid="@clientes.IdUsuario"
-                           class="bi bi-house btn btn-outline-secondary"></a>
+                           class="bi bi-house btn btn-outline-secondary" title="Endereço do cliente"></a>
                         <a asp-action="Cadastrar" asp-route-id="@clientes.IdUsuario"
-                           class="bi bi-pencil btn btn-outline-secondary"></a>
+                           class="bi bi-pencil btn btn-outline-secondary" title="Alteração do cliente"></a>
                         <a asp-action="Excluir" asp-route-id="@clientes.IdUsuario"
-                           class="bi bi-trash3-fill btn btn-outline-danger"></a>
+                           class="bi bi-trash3-fill btn btn-outline-danger" title="Exclusão do cliente"></a>
                     </td>
                 </tr>
             }
 
         </tbody>
     </table>
+</div>
 }
 else
 {

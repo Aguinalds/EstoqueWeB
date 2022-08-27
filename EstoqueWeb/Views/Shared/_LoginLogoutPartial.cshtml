@@ -1,15 +1,21 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using EstoqueWeb.Extensions
+@inject UserManager<UsuarioModel> _userManager
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
 
 @if (Context.User.Identity.IsAuthenticated)
 {
-
-    <li class="nav-item dropdown ">
-        <a class="nav-link dropdown-toggle text-primary mb-4 mr-4" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="text-primary p-2">Olá, <b>@Context.User.Identity.Name</b></span>
+    var usuario = await _userManager.GetUserAsync(Context.User);
+    <div>
+    <li class="nav-item dropdown pt-4"style="list-style:none;" >
+        <a class="nav-link dropdown-toggle text-primary mb-4 mr-5" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="text-primary p-2 text-user">Olá, <b>@usuario.NomeCompleto</b></span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end bg-dark mr-3">
+        <ul class="dropdown-menu dropdown-menu-end bg-dark mt-4" style="margin-right: 10vh" >
             <li>
-                <a class="dropdown-item text-primary" asp-controller="Usuario" asp-action="AlterarSenha" classes-if-active="disabled">
+                <a class="dropdown-item text-primary"   asp-controller="Usuario" asp-action="AlterarSenha" classes-if-active="disabled">
                     Alterar Senha
                 </a>
             </li>
@@ -21,9 +27,11 @@
             </li>
         </ul>
     </li>
+    </div>
 }
 else
 {
-    <a class="nav-link pe-0 bi bi-door-open mr-3" style="font-size: 17px;" asp-controller="Usuario" asp-action="Login">Entrar</a>
-    <a class="text-primary text-decoration-none mr-5" style="font-size: 17px;" asp-controller="Usuario" asp-action="Cadastrar">Cadastrar</a>
+
+    <a class="nav-link  mr-3 fw-bold" style="font-size: 17px;" asp-controller="Usuario" asp-action="Login">Entrar</a>
+    <a class="text-primary text-decoration-none mr-5 fw-bold" style="font-size: 17px;" asp-controller="Usuario" asp-action="Cadastrar">Cadastrar</a>
 }

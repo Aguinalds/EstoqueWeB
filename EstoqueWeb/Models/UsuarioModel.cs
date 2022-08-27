@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -9,23 +10,44 @@ using System.Threading.Tasks;
 namespace EstoqueWeb.Models
 {
     [Table("Usuario")]
-    public class UsuarioModel
+    public class UsuarioModel : IdentityUser<int>
     {
-        [Key]
-        public int IdUsuario { get; set; }
+        public UsuarioModel()
+        {
+            DataCadastro = DateTime.Now;
+            Status = true;
+        }
+    
+        [Display(Name = "Nome completo")]
+        [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
+        public string NomeCompleto { get; set; }
 
-        [Required, MaxLength(128)]
-        public string Nome { get; set; }
 
-        [Required, MaxLength(128)]
-        public string Email { get; set; }
+        [Display(Name = "Data de Nascimento")]
+        [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
+        [DataType(DataType.Date)]
+        public DateTime DataNascimento { get; set; }
 
-        [MaxLength(128)]
+        [Display(Name = "CPF")]
+        [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
+        [StringLength(11, ErrorMessage = "O campo {0} deve ter {1} dígitos.")]
+        public string CPF { get; set; }
+
+        [NotMapped]
+        public int Idade
+        {
+            get => (int)Math.Floor((DateTime.Now - DataNascimento).TotalDays / 365.2425);
+        }
+
+
+        public DateTime DataCadastro { get; set; }
+
+        public bool Status { get; set; }
+
+     
+  
+        [MaxLength(16, ErrorMessage = "O tamanho máximo do campo {0} é de {1}")]
+        [MinLength(8, ErrorMessage = "O tamanho mínimo do campo {0} é de {1}")]
         public string Senha { get; set; }
-
-        [ReadOnly(true)]
-        public DateTime? DataCadastro { get;}
-
-
     }
 }

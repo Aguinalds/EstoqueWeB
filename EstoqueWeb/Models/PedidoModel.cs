@@ -19,6 +19,8 @@ namespace EstoqueWeb.Models
 
         public double? ValorTotal { get; set; }
 
+        public string EntregaPdf { get; set; }
+
         public int IdCliente { get; set; }
 
         [ForeignKey("IdCliente")]
@@ -27,5 +29,6 @@ namespace EstoqueWeb.Models
         public EnderecoModel EnderecoEntrega { get; set; }
 
         public ICollection<ItemPedidoModel> ItensPedido { get; set; }
+    
     }
 }

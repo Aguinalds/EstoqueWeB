@@ -19,7 +19,7 @@
         </div>
     }
 </header>
-<h5>Cliente: <b>@pedido.Cliente.Nome</b></h5>
+<h5>Cliente: <b>@pedido.Cliente.NomeUsuario</b></h5>
 <hr />
 
 @if (pedido.DataEntrega.HasValue)
@@ -32,9 +32,13 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="text-primary table-dark table table-striped border border-primary border-2 rounded-3 tabela-itens" id="tableAll">
+<div class="table-responsive">
+    <table class="text-black table table-bordered border border-secondary border-2 rounded-3 tabela-itens " id="tableAll"
+           style="margin-bottom: 200px;">
+
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Produto</th>
                 <th>Valor Unit</th>
                 <th>Quantidade</th>
@@ -49,6 +53,17 @@
             @foreach (var itemPedido in Model)
             {
                 <tr>
+                    <td>
+                        @if (itemPedido.Produto.ImageUrl == null)
+                        {
+                            <img src="https://bhi.com.br/wp-content/themes/arkahost52/assets/images/default.jpg" width="70" height="70" style="border-radius: 10px" />
+                        }
+                        else
+                        {
+                            <img src="~/Upload/Images/@itemPedido.Produto.ImageUrl" width="70" height="70" style="border-radius: 10px" />
+
+                        }
+                    </td>
                     <td>@itemPedido.Produto.Nome</td>
                     <td>@itemPedido.ValorUnitario.ToString("C")</td>
                     <td>@itemPedido.Quantidade</td>
@@ -75,13 +90,14 @@
             <tr>
                 <td colspan="3" class="text-end"><b>Valor total do Pedido:</b></td>
                 <td><b>@Model.Sum(i => i.ValorItem).ToString("C")</b></td>
-                @if(!pedido.DataPedido.HasValue)
+                @if (!pedido.DataPedido.HasValue)
                 {
                     <td></td>
                 }
             </tr>
         </tfoot>
     </table>
+</div>
 }
 else
 {
@@ -91,10 +107,11 @@ else
 
 <div class="d-flex justify-content-end align-items-center gap-2">
     <a asp-action="Index" asp-controller="Pedido" asp-route-cid="@pedido.IdCliente"
-       class="btn btn-outline-secondary">Voltar</a>
+       class="btn btn-outline-secondary mt-5">Voltar</a>
     @if (!pedido.DataPedido.HasValue && pedido.ItensPedido.Count() > 0)
     {
         <a asp-action="Fechar" asp-controller="Pedido" asp-route-id="@pedido.IdPedido"
-           class="btn btn-primary">Fechar Pedido</a>
+           class="btn btn-primary mt-5">Fechar Pedido</a>
+
     }
 </div>

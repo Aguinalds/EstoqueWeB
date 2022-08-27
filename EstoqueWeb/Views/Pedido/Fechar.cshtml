@@ -5,7 +5,7 @@
 
 <h1 class="text-primary">@Html.Raw(ViewBag.Subtitulo)</h1>
 <hr />
-<h6>Cliente: <b class="text-dark">@Model.Cliente.Nome</b></h6>
+<h6>Cliente: <b class="text-dark">@Model.Cliente.NomeUsuario</b></h6>
 @if (Model.DataEntrega.HasValue)
 {
     <h6>Endereço de entrega: @Model.EnderecoEntrega.EnderecoCompleto</h6>
@@ -27,17 +27,20 @@ else
     <h6><b>Não há itens no pedido</b></h6>
 }
 
-<h4>Deseja realmente fechar esse pedido?</h4>
-<form asp-action="Fechar" class="w-25">
+
+<form asp-action="Fechar" class="w-auto"  style="margin-bottom: 100px; ">
     <input type="hidden" asp-for="@Model.IdPedido" name="id" />
-    <div class="mt-3">
+    <div class="mt-3 w-auto">
         @if (!Model.DataPedido.HasValue && Model.ItensPedido.Count() > 0)
         {
-            <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-outline-primary w-25">Não</a>
-            <button class="btn btn-outline-danger w-25" type="submit">Sim</button> }
+            <h4 class="mb-4">Deseja realmente fechar esse pedido?</h4>
+            <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-outline-primary" style="width: 10vh;">Não</a>
+            <button class="btn btn-outline-success" type="submit" style="width:10vh;">Sim</button> 
+        }
         else
         {
-            <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-outline-secondary w-25">Voltar</a>
+            <h3 class="text-danger mb-3">Não é possivel fechar o pedido sem itens</h3>
+            <a asp-action="Index" asp-route-cid="@Model.IdCliente" class="btn btn-outline-secondary w-auto">Voltar</a>
         }
 
     </div>

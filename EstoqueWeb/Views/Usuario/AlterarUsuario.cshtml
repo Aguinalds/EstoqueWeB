@@ -1,0 +1,58 @@
+﻿@model EstoqueWeb.ViewModel.CadastrarUsuarioViewModel
+@{ 
+        ViewBag.Subtitulo = "Alteração de Usuário";
+  
+}
+
+<br />
+<h1 class=" text-primary text-center"><b>@ViewBag.Subtitulo</b></h1>
+
+
+<div asp-validation-summary="ModelOnly" class="val-summary text-danger mb-3"></div>
+<partial name="_Mensagem" />
+
+<div class="container-login">
+    <form asp-action="AlterarUsuario" class="">
+        <div class="bi bi-person text-primary text-center" style="font-size: 40px"></div>
+        <input type="hidden" asp-for="@Model.Id" />
+        <div class="form-group">
+
+            <input asp-for="@Model.NomeCompleto" class="form-control " placeholder="Nome Completo" autocomplete="off" />
+            <span asp-validation-for="@Model.NomeCompleto" class="text-danger"></span>
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+
+            <input asp-for="@Model.DataNascimento" class="form-control " placeholder="Data de Nascimento" autocomplete="off" />
+            <span asp-validation-for="@Model.DataNascimento" class="text-danger"></span>
+
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+
+            <input asp-for="@Model.CPF" class="form-control " placeholder="CPF" autocomplete="off" />
+            <span asp-validation-for="@Model.CPF" class="text-danger"></span>
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+            <input asp-for="@Model.Telefone" class="form-control " id="campo_celular" placeholder="Telefone" autocomplete="off" />
+            <span asp-validation-for="@Model.Telefone" class="text-danger"></span>
+        </div>
+        <div class="w-100"> </div>
+        <div class="form-group">
+
+            <input asp-for="@Model.Email" class="form-control " placeholder="E-mail" type="email" name="email" autocomplete="off" />
+            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        </div>
+
+        <div class="text-center ml-2">
+            <a asp-action="Login" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-outline-primary ml-2" type="submit">Salvar</button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_Celular");}
+}

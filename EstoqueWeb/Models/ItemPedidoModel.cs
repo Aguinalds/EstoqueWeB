@@ -9,10 +9,10 @@ namespace EstoqueWeb.Models
     [Table("ItemPedido")]
     public class ItemPedidoModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+       
         public int IdPedido { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+   
         public int IdProduto { get; set; }
 
         public int Quantidade { get; set; }

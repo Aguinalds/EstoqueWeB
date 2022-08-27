@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EstoqueWeb.Models
 {
-    public class EstoqueWebContext : IdentityDbContext<IdentityUser>
+    public class EstoqueWebContext : IdentityDbContext<UsuarioModel, IdentityRole<int>, int>
     {
         public DbSet<CategoriaModel> Categorias { get; set; }
         public DbSet<ProdutosModel> Produtos { get; set; }
@@ -21,7 +22,7 @@ namespace EstoqueWeb.Models
 
         public EstoqueWebContext(DbContextOptions<EstoqueWebContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,11 +35,10 @@ namespace EstoqueWeb.Models
             {
                 e.WithOwner().HasForeignKey("IdUsuario");
                 e.HasKey("IdUsuario", "IdEndereco");
+
             });
 
-            modelBuilder.Entity<UsuarioModel>().Property(u => u.DataCadastro)
-               .HasDefaultValueSql("datetime('now', 'localtime', 'start of day')")
-               .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+           
             modelBuilder.Entity<ProdutosModel>().Property(p => p.Estoque)
                 .HasDefaultValue(0);
             modelBuilder.Entity<PedidoModel>()

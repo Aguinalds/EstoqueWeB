@@ -10,6 +10,7 @@ namespace EstoqueWeb.Models
     {
 
         [Display(Name = "Usuário")]
+        [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
         public string Usuario { get; set; }
 

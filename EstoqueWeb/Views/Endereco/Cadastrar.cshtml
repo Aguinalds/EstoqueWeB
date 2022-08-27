@@ -2,9 +2,9 @@
 @{
     var cliente = ViewBag.Cliente as ClienteModel;
     if (Context.Request.RouteValues.ContainsKey("eid"))
-        ViewBag.Subtitulo = $"Alteração de Endereço de <b>{cliente.Nome}</b>";
+        ViewBag.Subtitulo = $"Alteração de Endereço de <b>{cliente.NomeUsuario}</b>";
     else
-        ViewBag.Subtitulo = $"Cadastro de Endereço de <b>{cliente.Nome}</b>";
+        ViewBag.Subtitulo = $"Cadastro de Endereço de <b>{cliente.NomeUsuario}</b>";
 }
 
 <h1 class="text-primary">@Html.Raw(ViewBag.Subtitulo)</h1>

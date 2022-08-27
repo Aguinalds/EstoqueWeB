@@ -20,7 +20,7 @@ namespace EstoqueWeb.Controllers
             this._context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //LISTAR
         public async Task<IActionResult> Index(int? ped)
         {
@@ -44,7 +44,7 @@ namespace EstoqueWeb.Controllers
             return RedirectToAction("Index", "Cliente");
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //CADASTRAR
         [HttpGet]
         public async Task<IActionResult> Cadastrar(int? ped, int? prod)
@@ -94,7 +94,7 @@ namespace EstoqueWeb.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //CADASTRANDO E ALTERANDO
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromForm] ItemPedidoModel itemPedidos)
@@ -156,7 +156,7 @@ namespace EstoqueWeb.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //EXCLUINDO
         [HttpGet]
         public async Task<IActionResult> Excluir(int? ped, int? prod)
@@ -178,7 +178,7 @@ namespace EstoqueWeb.Controllers
             return View(itemPedido);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         [HttpPost]
         public async Task<IActionResult> Excluir(int idPedido, int idProduto)
         {

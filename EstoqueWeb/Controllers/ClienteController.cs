@@ -20,15 +20,15 @@ namespace EstoqueWeb.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //Listar
         public async Task<IActionResult> Index()
         {
-            var clientes = await _context.Clientes.OrderBy(x => x.Nome).AsNoTracking().ToListAsync();
+            var clientes = await _context.Clientes.OrderBy(x => x.NomeUsuario).AsNoTracking().ToListAsync();
             return View(clientes);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //CADASTRAR
         [HttpGet]
         public async Task<IActionResult> Cadastrar(int? id)
@@ -55,19 +55,18 @@ namespace EstoqueWeb.Controllers
             return _context.Clientes.Any(x => x.IdUsuario == id);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //CADASTRANDO E ALTERANDO
         [HttpPost]
         public async Task<IActionResult> Cadastrar(int? id, [FromForm] ClienteModel cliente)
         {
             if (ModelState.IsValid)
             {
-                if (id.HasValue)
+                if (id > 0)
                 {
                     if (ClienteExiste(id.Value))
                     {
                         _context.Update(cliente);
-                        _context.Entry(cliente).Property(x => x.Senha).IsModified = false;
                         if (await _context.SaveChangesAsync() > 0)
                         {
                             TempData["mensagem"] = MensagemModel.Serializar("Cliente alterado com sucesso.");
@@ -104,7 +103,7 @@ namespace EstoqueWeb.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //EXCLUINDO
         [HttpGet]
         public async Task<IActionResult> Excluir(int? id)
@@ -125,7 +124,7 @@ namespace EstoqueWeb.Controllers
             return View(cliente);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         [HttpPost]
         public async Task<IActionResult> Excluir(int id)
         {

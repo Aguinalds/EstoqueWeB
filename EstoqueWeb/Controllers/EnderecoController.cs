@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace EstoqueWeb.Controllers
 {
     public class EnderecoController : Controller
@@ -17,7 +18,7 @@ namespace EstoqueWeb.Controllers
             this._context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //LISTAR ENDEREÇOS
         public async Task<IActionResult> Index(int? cid)
         {
@@ -43,7 +44,7 @@ namespace EstoqueWeb.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //LISTANDO ENDEREÇOS QUE EXISTEM
         [HttpGet]
         public async Task<IActionResult> Cadastrar(int? cid, int? eid)
@@ -91,7 +92,7 @@ namespace EstoqueWeb.Controllers
                 .Enderecos.Any(e => e.IdEndereco == eid);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //CADASTRANDO 
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromForm] int? idUsuario,
@@ -139,11 +140,11 @@ namespace EstoqueWeb.Controllers
                     }
                     else
                     {
-                        var idEndereco = cliente.Enderecos.Count() > 0 ? cliente.Enderecos.Max(e => e.IdEndereco) + 1 : 1;
-                        endereco.IdEndereco = idEndereco;
+                      
                         _context.Clientes.FirstOrDefault(c => c.IdUsuario == idUsuario).Enderecos.Add(endereco);
                         if (await _context.SaveChangesAsync() > 0)
                         {
+
                             TempData["mensagem"] = MensagemModel.Serializar("Endereço cadastrado com sucesso.");
                         }
                         else
@@ -171,7 +172,7 @@ namespace EstoqueWeb.Controllers
             return cepNormalizado.Insert(5, "-");
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         //EXCLUINDO
         [HttpGet]
         public async Task<IActionResult> Excluir(int? cid, int? eid)
@@ -200,11 +201,11 @@ namespace EstoqueWeb.Controllers
             return View(endereco);
         }
 
-        [Authorize]
+        [Authorize(Roles = "administrador,gerente")]
         [HttpPost]
-        public async Task<IActionResult> Excluir(int idUsuario, int idEndereco)
+        public async Task<IActionResult> Excluir(int IdUsuario, int idEndereco)
         {
-            var cliente = await _context.Clientes.FindAsync(idUsuario);
+            var cliente = await _context.Clientes.FindAsync(IdUsuario);
             var endereco = cliente.Enderecos.FirstOrDefault(e => e.IdEndereco == idEndereco);
             if (endereco != null)
             {
@@ -225,7 +226,7 @@ namespace EstoqueWeb.Controllers
             {
                 TempData["mensagem"] = MensagemModel.Serializar("Endereço não encontrado.", TipoMensagem.Erro);
             }
-            return RedirectToAction("Index", new { cid = idUsuario });
+            return RedirectToAction("Index", new { cid = IdUsuario });
         }
     }
 }

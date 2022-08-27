@@ -1,0 +1,458 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html, body {
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+
+
+.tabela-categoria tr > th:last-child,
+.tabela-categoria tr > td:last-child {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.tabela-produtos tr > th:first-child,
+.tabela-produtos tr > td:first-child,
+.tabela-produtos tr > th:nth-child(2),
+.tabela-produtos tr > td:nth-child(2),
+.tabela-produtos tr > th:nth-child(3),
+.tabela-produtos tr > td:nth-child(3),
+.tabela-produtos tr > th:nth-child(4),
+.tabela-produtos tr > td:nth-child(4),
+.tabela-produtos tr > th:nth-child(5),
+.tabela-produtos tr > td:nth-child(5),
+.tabela-produtos tr > th:nth-child(6),
+.tabela-produtos tr > td:nth-child(6),
+.tabela-produtos tr > th:last-child,
+.tabela-produtos tr > td:last-child {
+    padding-top: 1vh;
+    width: 18%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+
+
+.tabela-clientes tr > th:last-child,
+.tabela-clientes tr > td:last-child,
+.tabela-clientes tr > th:nth-child(3),
+.tabela-clientes tr > td:nth-child(3),
+.tabela-clientes tr > th:nth-child(4),
+.tabela-clientes tr > td:nth-child(4) {
+    width: 15%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+
+.tabela-itens tr > th:first-child,
+.tabela-itens tr > td:first-child,
+.tabela-itens tr > th:nth-child(2),
+.tabela-itens tr > td:nth-child(2),
+.tabela-itens tr > th:nth-child(3),
+.tabela-itens tr > td:nth-child(3),
+.tabela-itens tr > th:nth-child(4),
+.tabela-itens tr > td:nth-child(4),
+.tabela-itens tr > th:nth-child(5),
+.tabela-itens tr > td:nth-child(5),
+.tabela-itens tr > th:last-child,
+.tabela-itens tr > td:last-child {
+    
+    white-space: nowrap;
+    text-align: center;
+}
+
+.tabela-abertos tr > th:first-child,
+.tabela-abertos tr > td:first-child,
+.tabela-abertos tr > th:nth-child(3),
+.tabela-abertos tr > td:nth-child(3),
+.tabela-abertos tr > th:last-child,
+.tabela-abertos tr > td:last-child {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.tabela-usuarios tr > th:first-child,
+.tabela-usuarios tr > td:first-child,
+.tabela-usuarios tr > th:nth-child(3),
+.tabela-usuarios tr > td:nth-child(3),
+.tabela-usuarios tr > th:nth-child(4),
+.tabela-usuarios tr > td:nth-child(4),
+.tabela-usuarios tr > th:nth-child(5),
+.tabela-usuarios tr > td:nth-child(5),
+.tabela-usuarios tr > th:nth-child(6),
+.tabela-usuarios tr > td:nth-child(6),
+.tabela-usuarios tr > th:last-child,
+.tabela-usuarios tr > td:last-child {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+
+.tabela-pedidos tr > th:last-child,
+.tabela-pedidos tr > td:last-child,
+.tabela-pedidos tr > th:nth-child(3),
+.tabela-pedidos tr > td:nth-child(3),
+.tabela-pedidos tr > th:nth-child(4),
+.tabela-pedidos tr > td:nth-child(4) {
+    width: 20%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.tabela-produtos tr > th:last-child,
+.tabela-produtos tr > td:last-child,
+.tabela-produtos tr > th:nth-child(3),
+.tabela-produtos tr > td:nth-child(3),
+.tabela-produtos tr > th:nth-child(4),
+.tabela-produtos tr > td:nth-child(4) {
+    width: 15%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+
+
+.validation-summaru ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.textEstoque {
+    font-size: 25px;
+}
+
+.textEstoque:hover {
+    transition: 3s;
+    color: white
+}
+
+.container-login {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2vh;
+    padding: 50px 40px;
+    border-radius: 5px;
+    border: solid 2px;
+    border-color: #007bff;
+    box-shadow: 6px 6px 6px 4px #343a40;
+}
+
+.textCadastrar {
+    font-size: 50px;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding: 1rem 1.2rem;
+    font-size: 1.0rem;
+    position: relative;
+}
+
+    .navbar-expand-lg .navbar-nav .nav-link:hover {
+        border-bottom: 4px solid #007bff;
+
+    }
+
+    .navbar-expand-lg .navbar-nav .nav-link.active {
+        border-bottom: 4px solid #005bbd;
+        color: #007bff;
+    }
+
+    .navbar-nav button{
+        padding: 1.2rem 0;
+
+    }
+.navbar-toggler{
+    height: 3rem;
+    border: none;
+}
+
+.navbar-toggler span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border: 1px;
+    background: #fff;
+}
+
+.navbar {
+    width: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .container-login {
+        width: 80%;
+    }
+
+    .navbar-expand-lg .navbar-nav .nav-link {
+     
+        font-size: 1rem;
+    }
+    .textEstoque{
+        width: 100%;
+       margin-left: 5.5rem;
+    }
+
+    .text-user{
+        
+        margin-left: 7rem;
+    }
+
+    .menu-itens{
+        display: block;
+        width: 20rem;
+        text-align: center;
+    }
+
+    .dropdown-menu-end {
+        margin-right: 800px;
+    }
+   
+
+
+}
+
+.animated-icon1, .animated-icon2, .animated-icon3 {
+    width: 30px;
+    height: 20px;
+    position: relative;
+    margin: 0px;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+    cursor: pointer;
+}
+
+    .animated-icon1 span, .animated-icon2 span, .animated-icon3 span {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        border-radius: 9px;
+        opacity: 1;
+        left: 0;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: .25s ease-in-out;
+        -moz-transition: .25s ease-in-out;
+        -o-transition: .25s ease-in-out;
+        transition: .25s ease-in-out;
+    }
+
+    .animated-icon1 span {
+        background: #005bbd;
+    }
+
+    .animated-icon2 span {
+        background: #005bbd;
+    }
+
+    .animated-icon3 span {
+        background: #005bbd;
+    }
+
+    .animated-icon1 span:nth-child(1) {
+        top: 0px;
+    }
+
+    .animated-icon1 span:nth-child(2) {
+        top: 10px;
+    }
+
+    .animated-icon1 span:nth-child(3) {
+        top: 20px;
+    }
+
+    .animated-icon1.open span:nth-child(1) {
+        top: 11px;
+        -webkit-transform: rotate(135deg);
+        -moz-transform: rotate(135deg);
+        -o-transform: rotate(135deg);
+        transform: rotate(135deg);
+    }
+
+    .animated-icon1.open span:nth-child(2) {
+        opacity: 0;
+        left: -60px;
+    }
+
+    .animated-icon1.open span:nth-child(3) {
+        top: 11px;
+        -webkit-transform: rotate(-135deg);
+        -moz-transform: rotate(-135deg);
+        -o-transform: rotate(-135deg);
+        transform: rotate(-135deg);
+    }
+
+    /* Icon 3*/
+
+    .animated-icon2 span:nth-child(1) {
+        top: 0px;
+    }
+
+    .animated-icon2 span:nth-child(2), .animated-icon2 span:nth-child(3) {
+        top: 10px;
+    }
+
+    .animated-icon2 span:nth-child(4) {
+        top: 20px;
+    }
+
+    .animated-icon2.open span:nth-child(1) {
+        top: 11px;
+        width: 0%;
+        left: 50%;
+    }
+
+    .animated-icon2.open span:nth-child(2) {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    .animated-icon2.open span:nth-child(3) {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+    .animated-icon2.open span:nth-child(4) {
+        top: 11px;
+        width: 0%;
+        left: 50%;
+    }
+
+    /* Icon 4 */
+
+    .animated-icon3 span:nth-child(1) {
+        top: 0px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+
+    .animated-icon3 span:nth-child(2) {
+        top: 10px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+
+    .animated-icon3 span:nth-child(3) {
+        top: 20px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+
+    .animated-icon3.open span:nth-child(1) {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        top: 0px;
+        left: 8px;
+    }
+
+    .animated-icon3.open span:nth-child(2) {
+        width: 0%;
+        opacity: 0;
+    }
+
+    .animated-icon3.open span:nth-child(3) {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        top: 21px;
+        left: 8px;
+    }
